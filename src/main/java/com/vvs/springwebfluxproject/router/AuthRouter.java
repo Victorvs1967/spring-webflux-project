@@ -1,6 +1,5 @@
 package com.vvs.springwebfluxproject.router;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
