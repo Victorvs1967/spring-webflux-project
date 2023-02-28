@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class AuthResponseDto {
-  private Object response;
+  private Object token;
 }

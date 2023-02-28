@@ -6,6 +6,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.vvs.springwebfluxproject.dto.AuthRequestDto;
 import com.vvs.springwebfluxproject.dto.AuthResponseDto;
+import com.vvs.springwebfluxproject.dto.UserDto;
 import com.vvs.springwebfluxproject.model.User;
 import com.vvs.springwebfluxproject.service.AuthService;
 
@@ -30,11 +31,11 @@ public class AuthHandler {
   }
 
   public Mono<ServerResponse> signup(ServerRequest request) {
-    return request.bodyToMono(User.class)
+    return request.bodyToMono(UserDto.class)
       .map(authService::signup)
       .flatMap(user -> ServerResponse
         .ok()
         .contentType(APPLICATION_JSON)
-        .body(user, User.class));
+        .body(user, UserDto.class));
   }
 }

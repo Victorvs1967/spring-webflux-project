@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<io.jsonwebtoken.version>0.11.5</io.jsonwebtoken.version>
+		<org.modelmapper.version>3.1.1</org.modelmapper.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -46,6 +47,11 @@
 				<artifactId>jjwt-jackson</artifactId>
 				<version>${io.jsonwebtoken.version}</version>
 				<scope>runtime</scope>
+		</dependency>
+		<dependency>
+				<groupId>org.modelmapper</groupId>
+				<artifactId>modelmapper</artifactId>
+				<version>${org.modelmapper.version}</version>
 		</dependency>
 
 		<dependency>
