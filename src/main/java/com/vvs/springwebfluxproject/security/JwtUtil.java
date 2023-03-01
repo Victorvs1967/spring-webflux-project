@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
+// import jakarta.annotation.PostConstruct;
 import reactor.core.publisher.Mono;
 
 import static com.vvs.springwebfluxproject.util.ListUtil.toSingleton;
@@ -32,7 +32,7 @@ public class JwtUtil {
   private Key key;
   public static final String KEY_ROLE = "role";
 
-  @PostConstruct
+  // @PostConstruct
   public void init() {
     key = Keys.hmacShaKeyFor(secret.getBytes());
   }
