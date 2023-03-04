@@ -1,5 +1,8 @@
 package com.vvs.springwebfluxproject.service;
 
+import java.time.Instant;
+import java.util.Date;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +34,12 @@ public class AuthServiceImpl implements AuthService {
       .switchIfEmpty(Mono.error(new RuntimeException("User already exist...")))
       .map(isUser -> userDto)
       .map(user -> dataMapper.convert(user, User.class))
-      .doOnNext(user -> user.setPassword(passwordEncoder.encode(user.getPassword())))
-      .doOnNext(user -> user.setRole(user.getRole() != null ? user.getRole() : Role.USER))
+      .doOnNext(user -> {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(user.getRole() != null ? user.getRole() : Role.USER);
+        user.setOnCreate(Date.from(Instant.now()));
+        user.setOnUpdate(Date.from(Instant.now()));
+      })
       .flatMap(userRepository::save)
       .map(user -> dataMapper.convert(user, UserDto.class));
   }

@@ -27,6 +27,11 @@ public class User implements UserDetails {
   private String password;
   private Role role;
 
+  private String firstName;
+  private String lastName;
+  private String phone;
+  private String address;
+
   private Date onCreate;
   private Date onUpdate;
   private Boolean isActive;

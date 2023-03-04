@@ -1,5 +1,6 @@
 package com.vvs.springwebfluxproject.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,9 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
@@ -16,14 +20,32 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+  @Value("${frontend.url}")
+  private String frontUrl;
+
   private final AuthenticationManager authenticationManager;
   private final SecurityContestRepository securityContestRepository;
 
   private final static String[] WHITE_LIST_URLS = {"/**", "/auth/signap", "/auth/login"};
 
+  public CorsConfigurationSource creatConfigurationSource() {
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    CorsConfiguration config = new CorsConfiguration();
+
+    config.setAllowCredentials(true);
+    config.addAllowedOrigin(frontUrl);
+    config.addAllowedHeader("*");
+    config.addAllowedMethod("*");
+    source.registerCorsConfiguration("/**", config);
+
+    return source;
+  }
+
   @Bean
   public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
     return http
+      .cors().configurationSource(creatConfigurationSource())
+      .and()
       .csrf().disable()
       .formLogin().disable()
       .exceptionHandling()
