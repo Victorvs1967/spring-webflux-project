@@ -31,7 +31,10 @@ public class AuthServiceImpl implements AuthService {
   public Mono<UserDto> signup(UserDto userDto) {
     return isUserExist(userDto.getUsername())
       .filter(isExist -> !isExist)
-      .switchIfEmpty(Mono.error(new RuntimeException("User already exist...")))
+      .switchIfEmpty(Mono.error(new RuntimeException("Username already exist...")))
+      .map(isUser -> isEmailExist(userDto.getEmail())
+        .filter(isExist -> !isExist)
+        .switchIfEmpty(Mono.error(new RuntimeException("Email already exist..."))))
       .map(isUser -> userDto)
       .map(user -> dataMapper.convert(user, User.class))
       .doOnNext(user -> {
@@ -58,6 +61,12 @@ public class AuthServiceImpl implements AuthService {
   private Mono<Boolean> isUserExist(String username) {
     return userRepository.findByUsername(username)
       .map(user -> true)
+      .switchIfEmpty(Mono.just(false));
+  }
+  
+  private Mono<Boolean> isEmailExist(String email) {
+    return userRepository.findByEmail(email)
+      .map(mail -> true)
       .switchIfEmpty(Mono.just(false));
   }
   

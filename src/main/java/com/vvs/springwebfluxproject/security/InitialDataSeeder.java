@@ -28,6 +28,9 @@ public class InitialDataSeeder implements ApplicationListener<ApplicationStarted
   @Value("${admin.password}")
   private String password;
 
+  @Value("${admin.email}")
+  private String email;
+
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
@@ -42,6 +45,7 @@ public class InitialDataSeeder implements ApplicationListener<ApplicationStarted
     User user = User.builder()
       .username(username)
       .password(passwordEncoder.encode(password))
+      .email(email)
       .role(Role.ADMIN)
       .onCreate(Date.from(Instant.now()))
       .onUpdate(Date.from(Instant.now()))
@@ -49,7 +53,7 @@ public class InitialDataSeeder implements ApplicationListener<ApplicationStarted
       .build();
 
     return userRepository.save(user)
-      .doOnNext(adminUser -> log.info("Admin user created successully"));
+      .doOnNext(adminUser -> log.info("Admin user created successuflly"));
   }
   
 }
