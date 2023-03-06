@@ -1,6 +1,7 @@
 package com.vvs.springwebfluxproject.service;
 
-import javax.xml.crypto.Data;
+import java.time.Instant;
+import java.util.Date;
 
 import org.springframework.stereotype.Service;
 
@@ -35,13 +36,41 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Mono<UserDto> updateUser(UserDto userDto) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'updateUser'");
+    return userRepository.findByUsername(userDto.getUsername())
+      .switchIfEmpty(Mono.error(new RuntimeException("User not found...")))
+      .map(user -> User.builder()
+        .id(user.getId())
+        .username(user.getUsername())
+        .password(user.getPassword())
+        .email(user.getEmail())
+        .firstName(userDto.getFirstName())
+        .lastName(userDto.getLastName())
+        .phone(userDto.getPhone())
+        .address(userDto.getAddress())
+        .onCreate(user.getOnCreate())
+        .onUpdate(Date.from(Instant.now()))
+        .isActive(user.getIsActive())
+        .role(userDto.getRole())
+        .build())
+      .flatMap(userRepository::save)
+      .map(user -> dataMapper.convert(user, UserDto.class));
   }
 
   @Override
   public Mono<UserDto> deleteUser(String username) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'deleteUser'");
+    return userRepository.findByUsername(username)
+        .switchIfEmpty(Mono.error(new RuntimeException("User not found...")))
+        .flatMap(this::delete).log()
+        .map(user -> dataMapper.convert(user, UserDto.class));
   }
+
+  private Mono<User> delete(User user) {
+    return Mono.fromSupplier(() -> {
+      userRepository
+        .delete(user)
+        .subscribe();
+      return user;
+    });
+  }
+
 }

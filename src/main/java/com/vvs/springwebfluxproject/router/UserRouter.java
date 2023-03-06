@@ -17,7 +17,10 @@ public class UserRouter {
   public RouterFunction<ServerResponse> userRouterFunctions(UserHandler handler) {
     return route()
       .nest(path("/api/users"), builder -> builder
-        .GET("", handler::getUsers))
+        .GET("", handler::getUsers)
+        .GET("/{username}", handler::getUser)
+        .PUT("/{username}", handler::updateUser)
+        .DELETE("/{username}", handler::deleteUser))
       .build();
   }
 }
