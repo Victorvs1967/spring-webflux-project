@@ -9,5 +9,5 @@ jjwt:
   expiration:  24
 
 admin:
-  username: ${ADMIN_NAME:${{ADMIN_NAME}}}
-  password: ${ADMIN_PASSWORD:${{ADMIN_PASSWORD}}}
+  username: ${ADMIN_NAME:${{secrets.ADMIN_NAME}}}
+  password: ${ADMIN_PASSWORD:${{secrets.ADMIN_PASSWORD}}}
